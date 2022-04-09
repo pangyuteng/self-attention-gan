@@ -1,13 +1,13 @@
 
-docker build -t sa-gan .
 
-docker run -it -u $(id -u):$(id -g)  --runtime=nvidia --gpus=1 -v /mnt/hd:/mnt/hd -v /mnt/hd1:/mnt/hd1 -v /mnt/hd2:/mnt/hd2 sa-gan bash
-docker run -it --runtime=nvidia --gpus=1 sa-gan bash
 
-cd ..
+docker build -f prepare/Dockerfile -t sa-gan .
+
 docker run -it --runtime=nvidia -w /workdir -v $PWD:/workdir --gpus=1 sa-gan bash
-cd prepare
+
+cd /workdir/prepare
 python3 download.py
 python3 convert_imagenet_to_records.py
 
-python3 train_imagenet.py --generator_type test --discriminator_type test --data_dir /mnt/hd/myfolder --batch_size 8
+cd /workdir
+python3 train_imagenet.py --generator_type test --discriminator_type test --data_dir /workdir/preapre/ --batch_size 8
