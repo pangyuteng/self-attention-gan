@@ -24,7 +24,7 @@ def _bytes_feature(value):
 
 def main(argv):
     pattern = "/home/ian/imagenet/ILSVRC2012_img_train_t1_t2/n*/*JPEG"
-    pattern = "/mnt/hd2/data/celeba_gan/img_align_celeba/*jpg"
+    pattern = "/workdir/celeba_gan/img_align_celeba/*jpg"
     files = glob(pattern)
     assert len(files) > 0
     #assert len(files) > 1000000, len(files)
@@ -38,9 +38,10 @@ def main(argv):
     #str_to_int = dict(zip(dirs, range(len(dirs))))
 
 
-    outfile = "/mnt/hd/myfolder/imagenet_train_labeled.tfrecords" #'/media/NAS_SHARED/imagenet/imagenet_train_labeled_' + str(IMSIZE) + '.tfrecords'
+    outfile = '/media/NAS_SHARED/imagenet/imagenet_train_labeled_' + str(IMSIZE) + '.tfrecords'
+    outfile = '/workdir/celeba_gan_tfr/imagenet_train_labeled.tfrecords'
     writer = tf.python_io.TFRecordWriter(outfile)
-    for i, f in enumerate(files):
+    for f in tqdm(files):
         print(i)
         image = get_image(f, IMSIZE, is_crop=True, resize_w=IMSIZE)
         image = colorize(image)
@@ -54,8 +55,8 @@ def main(argv):
         image_raw = image.tostring()
         class_str = "ok"#f.split('/')[-2]
         label = 0 #str_to_int[class_str]
-        if i % 1 == 0:
-            print(i, '\t',label)
+        #if i % 1 == 0:
+        #    print(i, '\t',label)
         example = tf.train.Example(features=tf.train.Features(feature={
             'height': _int64_feature(IMSIZE),
             'width': _int64_feature(IMSIZE),
