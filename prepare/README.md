@@ -2,8 +2,9 @@
 
 ```
 
+cd prepare
+docker build -t sa-gan .
 cd ..
-docker build -f prepare/Dockerfile -t sa-gan prepare
 docker run -it --runtime=nvidia -w /workdir -v $PWD:/workdir --gpus=1 sa-gan bash
 
 cd /workdir/prepare
