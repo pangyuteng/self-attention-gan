@@ -23,23 +23,28 @@ def _bytes_feature(value):
     return tf.train.Feature(bytes_list=tf.train.BytesList(value=[value]))
 
 def main(argv):
-    pattern = "/home/ian/imagenet/ILSVRC2012_img_train_t1_t2/n*/*JPEG"
-    pattern = "/workdir/celeba_gan/img_align_celeba/*jpg"
+    kind = 'celeba'
+    if kind != 'celeba':
+        pattern = "/home/ian/imagenet/ILSVRC2012_img_train_t1_t2/n*/*JPEG"
+    else:
+        pattern = "/workdir/prepare/celeba_gan/img_align_celeba/*jpg"
     files = glob(pattern)
     assert len(files) > 0
     #assert len(files) > 1000000, len(files)
     assert len(files) > 1000
     shuffle(files)
-
+    
     dirs = glob("/home/ian/imagenet/ILSVRC2012_img_train_t1_t2/n*")
     #assert len(dirs) == 1000, len(dirs)
     dirs = [d.split('/')[-1] for d in dirs]
     dirs = sorted(dirs)
     #str_to_int = dict(zip(dirs, range(len(dirs))))
 
+    if kind != 'celeba':
+        outfile = '/media/NAS_SHARED/imagenet/imagenet_train_labeled_' + str(IMSIZE) + '.tfrecords'
+    else:
+        outfile = '/workdir/prepare/celeba_gan_tfr/imagenet_train_labeled.tfrecords'
 
-    outfile = '/media/NAS_SHARED/imagenet/imagenet_train_labeled_' + str(IMSIZE) + '.tfrecords'
-    outfile = '/workdir/celeba_gan_tfr/imagenet_train_labeled.tfrecords'
     writer = tf.python_io.TFRecordWriter(outfile)
     for f in tqdm(files):
         print(i)
@@ -53,10 +58,14 @@ def main(argv):
         # from pylearn2.utils.image import save
         # save('foo.png', (image + 1.) / 2.)
         image_raw = image.tostring()
-        class_str = "ok"#f.split('/')[-2]
-        label = 0 #str_to_int[class_str]
-        #if i % 1 == 0:
-        #    print(i, '\t',label)
+        if kind != 'celeba':
+            class_str = f.split('/')[-2]
+            label = str_to_int[class_str]
+            if i % 1 == 0:
+                print(i, '\t',label)
+        else:
+            class_str = "ok"
+            label = 0
         example = tf.train.Example(features=tf.train.Features(feature={
             'height': _int64_feature(IMSIZE),
             'width': _int64_feature(IMSIZE),
