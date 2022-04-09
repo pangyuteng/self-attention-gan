@@ -13,6 +13,6 @@ python3 download.py
 python3 convert_imagenet_to_records.py
 
 cd /workdir
-python3 train_imagenet.py --generator_type test --discriminator_type test --data_dir /workdir/preapre/ --batch_size 8
+python3 train_imagenet.py --generator_type test --discriminator_type test --data_dir /workdir/prepare/celeba_gan_tfr --batch_size 8
 
 ```
