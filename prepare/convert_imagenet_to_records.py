@@ -3,6 +3,7 @@
 from scipy.misc.pilutil import imread 
 from random import shuffle
 import time
+from tqdm import tqdm
 
 import tensorflow as tf
 from glob import glob
