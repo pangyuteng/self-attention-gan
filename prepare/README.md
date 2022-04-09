@@ -3,6 +3,7 @@
 ```
 
 cd prepare
+export DOCKER_BUILDKIT=1
 docker build -t sa-gan .
 cd ..
 docker run -it --runtime=nvidia -w /workdir -v $PWD:/workdir --gpus=1 sa-gan bash
